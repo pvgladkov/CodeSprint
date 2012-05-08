@@ -16,15 +16,15 @@ int solve( char String[], char Pattern[] ){
         for( int j = 0; j < LenPattern; j++  ){
             if( CountMismatch > 1 ){
                 break;
-            }
+			}
 
             if( Pattern[j] != String[ i + j ]){
                 CountMismatch++;
             }
-        }
+		}
         if( CountMismatch < 2 ){
             cout << i << " ";
-        }
+		}
 
 	}
 
@@ -32,14 +32,14 @@ int solve( char String[], char Pattern[] ){
 
 
 int main() {
-    int runs ;
-    char HumanDNA[ MAXN ]; // днк человека
-    char Virus[ MAXN ];
-    cin >> runs ;
-    while(runs--){
-        cin >> HumanDNA >> Virus ;
-        solve( HumanDNA, Virus) ;
-        cout << "\n" ;
-    }
-    return 0 ;
+	int runs ;
+	char HumanDNA[ MAXN ]; // днк человека
+	char Virus[ MAXN ];
+	cin >> runs ;
+	while(runs--){
+		cin >> HumanDNA >> Virus ;
+		solve( HumanDNA, Virus) ;
+		cout << "\n" ;
+	}
+	return 0 ;
 }
