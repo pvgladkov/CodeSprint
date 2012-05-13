@@ -131,7 +131,9 @@ float getTime( std::vector< int > Directions, int Positions[], int Count ){
 			}
 		}
 	}
-	cout << "Total time для этой конфигурации" << totalTime << " \n" ;
+	if( debug ){
+		cout << "Total time для этой конфигурации" << totalTime << " \n" ;
+	}
 	
 	return totalTime;
 	
@@ -221,12 +223,12 @@ long long solve( int Count, int Positions[] ){
 	// [0 1]
 	Directions.push_back(0);
 	Directions.push_back(1);
-	Times[1][1] = getTime( Directions, Positions, 2 );
+	Times[1][1] = getMeetsCount( Directions, Positions, 2 );
 	Directions.pop_back();
 	Directions.pop_back();
 	Directions.push_back(1);
 	Directions.push_back(0);
-	Times[1][0] = getTime( Directions, Positions, 2 );
+	Times[1][0] = getMeetsCount( Directions, Positions, 2 );
 	Directions.pop_back();
 	Directions.pop_back();
 	if( Times[1][1] > Times[1][0] ){
@@ -254,7 +256,7 @@ long long solve( int Count, int Positions[] ){
 		Directions.push_back(0);
 		//cout << tmp[0] << "  " << tmp[1]<< " ";
 		// [[] 0]
-		Times[i][0] = Times[i-1][3] + getTime( Directions, Positions, i+1 );
+		Times[i][0] = Times[i-1][3] + getMeetsCount( Directions, Positions, i+1 );
 		
 		if( debug ){
 			cout << "время если последний 0: " << Times[i][0] << "\n";
@@ -263,7 +265,7 @@ long long solve( int Count, int Positions[] ){
 		Directions.pop_back();
 		Directions.push_back(1);
 		// [[] 1]
-		Times[i][1] = Times[i-1][3] + getTime( Directions, Positions, i+1 );
+		Times[i][1] = Times[i-1][3] + getMeetsCount( Directions, Positions, i+1 );
 		
 		if( debug ){
 			cout << "время если последний 1: " << Times[i][1] << "\n";
@@ -272,10 +274,10 @@ long long solve( int Count, int Positions[] ){
 		Directions.pop_back();
 		if( Times[i][0] > Times[i][1] ){
 			Directions.push_back(1);
-			Times[i][3] = Times[i][1];
+			Times[i][3] = Times[i][0];
 		} else {
 			Directions.push_back(0);
-			Times[i][3] = Times[i][0];
+			Times[i][3] = Times[i][1];
 		}
 		
 		if( debug ){
@@ -301,9 +303,9 @@ long long solve( int Count, int Positions[] ){
 		cout << "\n";
 	}
 	
-	Return = getMeetsCount( tmp, Positions, Count );
+	//Return = getMeetsCount( tmp, Positions, Count );
 	
-	return Return;
+	return Times[Count-1][3];
 }
 
 int main(){
