@@ -10,6 +10,8 @@ using namespace std ;
 #define V 0.1
 #define T 1000000006
 
+#define debug true
+
 int modRazn( int a, int b ){
 	if( a >= b ){
 		return a - b;
@@ -64,6 +66,13 @@ float getTime( std::vector< int > Directions, int Positions[], int Count ){
 	
 	//cout << "Ants " << Count << " \n";
 	
+	if( debug ){
+		// проверим что координаты верно передались 
+		for( int i = 0; i < Count; i++ ){
+			cout << Positions[i] << " ";
+		}
+		cout << "\n";
+	}
 	
 	// считаем время до встречи каждого идущего по часовой стрелки с каждым 
 	// идущим против часовой
@@ -83,6 +92,21 @@ float getTime( std::vector< int > Directions, int Positions[], int Count ){
 			protiv++;
 		}
 	}
+	
+	if( debug ){
+		cout << " расклад по позициям: \n";
+		cout << "по ";
+		for( int i = 0; i < po; i++ ){
+			cout << Po[i] << " ";
+		}
+		cout << "\n против ";
+		for( int i = 0; i < protiv; i++ ){
+			cout << Protiv[i] << " ";
+		}
+		cout << "\n";
+	}
+	
+	
 	
 	//cout << "Po " << po << " protiv " << protiv << " ";
 	
@@ -172,19 +196,60 @@ float solve( int Count, int Positions[] ){
 	Times[0][1] = 0;
 	Times[0][3] = 0;
 	
-	//
+	if( debug ){
+		// проверим что координаты верно передались 
+		for( int i = 0; i < Count; i++ ){
+			cout << Positions[i] << " ";
+		}
+		cout << "\n";
+	}
+	
+	// надо решить как расположить первые два
+	// [0 1] или [1 0]
+	// [0 1]
+	Directions.push_back(0);
 	Directions.push_back(1);
-	for( i = 1; i < Count; i++ ){
+	Times[1][1] = getTime( Directions, Positions, 2 );
+	Directions.pop_back();
+	Directions.pop_back();
+	Directions.push_back(1);
+	Directions.push_back(0);
+	Times[1][0] = getTime( Directions, Positions, 2 );
+	Directions.pop_back();
+	Directions.pop_back();
+	if( Times[1][1] > Times[1][0] ){
+		Times[1][3] = Times[1][0];
+		Directions.push_back(1);
+		Directions.push_back(0);
+	} else {
+		Times[1][3] = Times[1][1];
+		Directions.push_back(0);
+		Directions.push_back(1);
+	}
+	
+	if( debug ){
+		cout << "оптимальный выобр начальной конфигурации: " 
+			<< Directions[0] << " " << Directions[1] << "\n"
+		;
+	}
+	
+	for( i = 2; i < Count; i++ ){
 		tmp = Directions;
 		Directions = vector<int>();
 		tmp.push_back(0);
 		//cout << tmp[0] << "  " << tmp[1]<< " ";
 		// [[] 0]
 		Times[i][0] = Times[i-1][3] + getTime( tmp, Positions, i+1 );
+		if( debug ){
+			cout << "время если последний 0: " << Times[i][0] << "\n";
+		}
 		tmp.pop_back();
 		tmp.push_back(1);
 		// [[] 1]
 		Times[i][1] = Times[i-1][3] + getTime( tmp, Positions, i+1 );
+		if( debug ){
+			cout << "время если последний 1: " << Times[i][1] << "\n";
+		}
 		if( Times[i][0] > Times[i][1] ){
 			Directions.push_back(1);
 			Times[i][3] = Times[i][1];
@@ -197,6 +262,13 @@ float solve( int Count, int Positions[] ){
 	
 	tmp = Directions;
 	Directions = vector<int>();
+	
+	if( debug ){
+		for( int i = 0; i < Count; i++ ){
+			cout << tmp[i] << " ";
+		}
+	}
+	cout << "\n";
 	Return = getMeetsCount( tmp, Positions, Count );
 	
 	return Return;
