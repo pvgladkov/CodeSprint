@@ -133,13 +133,13 @@ float getTime( std::vector< int > Directions, int Positions[], int Count ){
  * @param Count общее кол-во
  * @return 
  */
-int getMeetsCount( std::vector< int > Directions, int Positions[], int Count ){
+long long getMeetsCount( std::vector< int > Directions, int Positions[], int Count ){
 	
 	// разобьем муравьев по направления и попарно вычислим кол-во встреч 
 	int Po[ MAXN ];
 	int Protiv[ MAXN ];
 	int po, protiv;
-	int totalCount;
+	long long totalCount;
 	float Time; // время первой встречи пары
 	
 	po = 0;
@@ -182,11 +182,12 @@ int getFirstMeetTime( int x1, int x2){
 	
 }
 
-float solve( int Count, int Positions[] ){
+long long solve( int Count, int Positions[] ){
 	
 	// конфигурация
 	//int Directions[ MAXN ];
-	int i, Return;
+	int i;
+	long long Return;
 	std::vector< int > Directions;
 	std::vector< int > tmp;
 	
@@ -258,17 +259,30 @@ float solve( int Count, int Positions[] ){
 			Times[i][3] = Times[i][0];
 		}
 		
+		if( debug ){
+			
+			cout << " конфигурация для шага " << i << ": ";
+			for( int j = 0; j < i+1; j++ ){
+				cout << Directions[j] << " ";
+			}
+			cout << "\n";
+		}
+		
 	}
 	
 	tmp = Directions;
 	Directions = vector<int>();
 	
 	if( debug ){
+	
+		cout << "\n";
+		cout << "финальная конфигурация: ";
 		for( int i = 0; i < Count; i++ ){
 			cout << tmp[i] << " ";
 		}
+		cout << "\n";
 	}
-	cout << "\n";
+	
 	Return = getMeetsCount( tmp, Positions, Count );
 	
 	return Return;
