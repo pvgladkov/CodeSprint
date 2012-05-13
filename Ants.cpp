@@ -113,14 +113,25 @@ float getTime( std::vector< int > Directions, int Positions[], int Count ){
 	totalTime = 0;
 	for( int i = 0; i < po; i++ ){
 		for( int j = 0; j < protiv; j++ ){
+			
+			if( debug ){
+				cout << "Po: " <<  Po[i] << "; Protiv: " << Protiv[j] << "\n";
+			}
+			
 			if( Po[i] > Protiv[j] ){
-				totalTime = totalTime + ( S - modRazn( Po[i], Protiv[j] ) ) / (2 * V);
+				totalTime = totalTime + (( S - (Po[i] - Protiv[j]) ) / (2 * V));
+				if( debug ){
+					cout << "по больше, время: " << totalTime << "\n"; 
+				}
 			} else {
-				totalTime = totalTime + modRazn( Po[i], Protiv[j] ) / (2 * V);
+				totalTime = totalTime + ((Protiv[j] - Po[i]) / (2 * V));
+				if( debug ){
+					cout << "по меньше, время: " << totalTime << "\n"; 
+				}
 			}
 		}
 	}
-	//cout << "Total time " << totalTime << " \n" ;
+	cout << "Total time для этой конфигурации" << totalTime << " \n" ;
 	
 	return totalTime;
 	
@@ -191,7 +202,7 @@ long long solve( int Count, int Positions[] ){
 	std::vector< int > Directions;
 	std::vector< int > tmp;
 	
-	float Times[1000][3];
+	float Times[1000][20];
 	
 	Times[0][0] = 0;
 	Times[0][1] = 0;
@@ -235,22 +246,30 @@ long long solve( int Count, int Positions[] ){
 	}
 	
 	for( i = 2; i < Count; i++ ){
-		tmp = Directions;
-		Directions = vector<int>();
-		tmp.push_back(0);
+		
+		if( debug ){
+			cout << "\n" << "ШАГ " << i << "\n" << "\n"; 
+		}
+		
+		Directions.push_back(0);
 		//cout << tmp[0] << "  " << tmp[1]<< " ";
 		// [[] 0]
-		Times[i][0] = Times[i-1][3] + getTime( tmp, Positions, i+1 );
+		Times[i][0] = Times[i-1][3] + getTime( Directions, Positions, i+1 );
+		
 		if( debug ){
 			cout << "время если последний 0: " << Times[i][0] << "\n";
 		}
-		tmp.pop_back();
-		tmp.push_back(1);
+		
+		Directions.pop_back();
+		Directions.push_back(1);
 		// [[] 1]
-		Times[i][1] = Times[i-1][3] + getTime( tmp, Positions, i+1 );
+		Times[i][1] = Times[i-1][3] + getTime( Directions, Positions, i+1 );
+		
 		if( debug ){
 			cout << "время если последний 1: " << Times[i][1] << "\n";
 		}
+		
+		Directions.pop_back();
 		if( Times[i][0] > Times[i][1] ){
 			Directions.push_back(1);
 			Times[i][3] = Times[i][1];
@@ -260,7 +279,6 @@ long long solve( int Count, int Positions[] ){
 		}
 		
 		if( debug ){
-			
 			cout << " конфигурация для шага " << i << ": ";
 			for( int j = 0; j < i+1; j++ ){
 				cout << Directions[j] << " ";
