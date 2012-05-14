@@ -108,7 +108,7 @@ long long solve_3( long long Values[], int Count, int CountTogether ){
 	StartSumm = counter( Values );
 	
 	Limit = CountTogether;
-	i = 0;
+	i = CountTogether - 1;
 	
 	while( i < Count - CountTogether ){
 		DeleteItem = Values[i];
@@ -124,8 +124,37 @@ long long solve_3( long long Values[], int Count, int CountTogether ){
 		}
 		StartSumm = StartSumm - DeleteItem;
 		Limit = i + CountTogether + 1;
-		i = DeleteItemNum + 1;
+		i = DeleteItemNum + CountTogether;
 	}
+	
+	return  StartSumm;
+}
+
+long long solve_4( long long Values[], int Count, int CountTogether ){
+	
+	long long StartSumm;
+	long long DeleteItem;
+	int DeleteItemNum;
+	int Limit;
+	int i;
+	long long FirstMin, SecondMin;
+	
+
+	
+	// посчитаем сумму всех значений на момент старта
+	StartSumm = counter( Values );
+	
+	// найдем два самых маленьких значения от края до 2n+1
+	i = 0;
+	Limit = 2*CountTogether + 1;
+	while( i < Count - CountTogether ){
+		FirstMin = Values[i];
+		SecondMin = Values[i+1];
+		for( int j = i; j < Limit; j++ ){
+			
+		}
+	}
+	
 	
 	return  StartSumm;
 }
